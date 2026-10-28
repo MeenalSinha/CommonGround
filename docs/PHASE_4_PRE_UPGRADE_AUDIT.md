@@ -124,7 +124,7 @@ All of the following were **run** against a live `uvicorn` with no key (not just
 | Validation | PASS (run) | no signal gives 422; 21 ids gives 422. |
 | Consistent error envelope | PASS (run) | |
 | Provenance preserved | PASS (test) | |
-| Rate limits and timeouts | PASS (test, mocked) | 429 surfaced with Retry-After; timeouts retried. Not exercised against real Qloo. |
+| Rate limits and timeouts | PASS (test, mocked) | 429 not retried and Retry-After preserved; timeouts bounded and classified. Not exercised against real Qloo. |
 | Logs free of secrets | PASS (test) | existing backend tests assert the key is absent from logs. |
 | No fabricated results when unavailable | PASS (run) | |
 | Authenticated behavior | **BLOCKED EXTERNALLY** | no key. |

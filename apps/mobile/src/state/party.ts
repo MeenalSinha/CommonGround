@@ -3,6 +3,7 @@
  * Everything here is derived from user input or from entities the backend returned.
  */
 import type { Entity, RecommendationsResponse } from '@/types/api';
+import type { NegotiationSession } from './negotiation/types';
 
 /** Mirrors the backend contract (docs/API_CONTRACT.md): at most 20 entity ids per request. */
 export const MAX_SIGNAL_IDS = 20;
@@ -53,9 +54,16 @@ export interface PartyState {
   party: Party | null;
   targetType: string | null;
   run: DiscoveryRun | null;
+  /** Phase 4: the group's negotiation and plan. Reconciled with the party by `store.ts`. */
+  negotiation: NegotiationSession | null;
 }
 
-export const initialPartyState: PartyState = { party: null, targetType: null, run: null };
+export const initialPartyState: PartyState = {
+  party: null,
+  targetType: null,
+  run: null,
+  negotiation: null,
+};
 
 export type PartyAction =
   | { type: 'party/create'; id: string; name: string }
