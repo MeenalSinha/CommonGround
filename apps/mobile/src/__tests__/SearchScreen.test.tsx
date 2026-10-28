@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { SearchScreen } from '@/screens/SearchScreen';
 import { envelope, health, jsonResponse, mockBackend, qlooStatus } from '@/testing/mockBackend';
 import { renderWithStatus } from '@/testing/renderWithStatus';
@@ -100,10 +100,17 @@ describe('SearchScreen', () => {
       expect(screen.getByLabelText('Search Qloo entities').props.editable).toBe(true),
     );
     await fireEvent.changeText(screen.getByLabelText('Search Qloo entities'), 'zzz');
-    await fireEvent.press(screen.getByLabelText('Search'));
+    // RNTL's async fireEvent waits for the app to settle, which never happens while this request is
+    // deliberately held open. Start the press inside act and await it after the request is released.
+    let pressed: Promise<unknown> = Promise.resolve();
+    await act(async () => {
+      pressed = fireEvent.press(screen.getByLabelText('Search'));
+      await Promise.resolve();
+    });
     expect(await screen.findByLabelText('Searching Qloo')).toBeTruthy();
     release(jsonResponse(searchPayload([])));
     expect(await screen.findByText('Nothing found')).toBeTruthy();
+    await pressed;
     expect(screen.queryByText('Something went wrong')).toBeNull();
     expect(screen.queryByLabelText('Searching Qloo')).toBeNull();
   });

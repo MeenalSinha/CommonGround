@@ -17,8 +17,10 @@ import {
   discoveryBlockers,
   fingerprint,
   groupInterests,
+  memberNamesFor,
   snapshotSignals,
   type DiscoveryRun,
+  type Party,
 } from '@/state/party';
 import { colors, radii, sizes, spacing, typography } from '@/theme';
 import { entityTypeLabel, formatTime } from '@/utils/format';
@@ -207,17 +209,17 @@ export function DiscoveryScreen() {
         />
       ) : null}
 
-      {shownRun ? <Results run={shownRun} /> : null}
+      {shownRun ? <Results run={shownRun} party={party} /> : null}
 
       <Button label="Back to party" variant="secondary" onPress={() => router.back()} />
     </Screen>
   );
 }
 
-function Results({ run }: { run: DiscoveryRun }) {
+function Results({ run, party }: { run: DiscoveryRun; party: Party }) {
   const [showSource, setShowSource] = useState(false);
   const { response } = run;
-  const people = new Set(run.signals.flatMap((s) => s.memberNames)).size;
+  const people = new Set(run.signals.flatMap((s) => s.memberIds)).size;
   const retrieved = formatTime(response.provenance.retrieved_at);
   return (
     <View style={styles.stack}>
@@ -226,7 +228,7 @@ function Results({ run }: { run: DiscoveryRun }) {
           {`${entityTypeLabel(run.targetType)} suggestions from Qloo`}
         </Text>
         <Text style={[typography.body, styles.ink]}>
-          {`Based on ${run.signals.length} ${run.signals.length === 1 ? 'interest' : 'interests'} from ${people} ${people === 1 ? 'person' : 'people'}: ${run.signals.map((s) => `${s.name} (${s.memberNames.join(', ')})`).join('; ')}.`}
+          {`Based on ${run.signals.length} ${run.signals.length === 1 ? 'interest' : 'interests'} from ${people} ${people === 1 ? 'person' : 'people'}: ${run.signals.map((s) => `${s.name} (${memberNamesFor(party, s.memberIds).join(', ')})`).join('; ')}.`}
         </Text>
       </Card>
 
@@ -246,7 +248,9 @@ function Results({ run }: { run: DiscoveryRun }) {
       />
       {showSource ? (
         <Card>
-          <Text style={[typography.body, styles.ink]}>{`Source: ${response.provenance.source}`}</Text>
+          <Text
+            style={[typography.body, styles.ink]}
+          >{`Source: ${response.provenance.source}`}</Text>
           <Text style={[typography.body, styles.ink]}>
             {`Endpoint: ${response.provenance.endpoint}`}
           </Text>

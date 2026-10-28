@@ -65,7 +65,9 @@ describe('PartyScreen', () => {
       seedParty([{ name: 'Ann', interests: [entity('A', 'Alpha')] }, { name: 'Bo' }]),
     );
     expect(screen.getByText(/2 people/)).toBeTruthy();
-    expect(screen.getByText(/1 interest/)).toBeTruthy();
+    // The header and Ann's card both say "1 interest"; assert on the header's full line.
+    expect(screen.getByText(/2 people.*1 interest/)).toBeTruthy();
+    expect(screen.getAllByText('1 interest')).toHaveLength(1); // Ann's card
     expect(screen.getByText('Alpha')).toBeTruthy();
     expect(screen.getByText(/No interests yet/)).toBeTruthy();
   });

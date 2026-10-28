@@ -146,7 +146,6 @@ export function InterestPicker({
           <Button label="Save note" variant="secondary" onPress={saveNote} />
         </View>
       ) : null}
-
     </Card>
   );
 }

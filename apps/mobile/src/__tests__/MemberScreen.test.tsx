@@ -16,7 +16,8 @@ const STATUS = 'GET /api/v1/integrations/qloo/status';
 const TYPES = 'GET /api/v1/qloo/entity-types';
 const SEARCH = 'GET /api/v1/qloo/entities/search';
 
-const configured = () => jsonResponse(qlooStatus({ state: 'ready', configured: true, ready: true }));
+const configured = () =>
+  jsonResponse(qlooStatus({ state: 'ready', configured: true, ready: true }));
 const typesRoute = () => jsonResponse({ types: ENTITY_TYPES });
 
 function searchPayload(items: unknown[]) {
@@ -50,14 +51,22 @@ async function waitForSearchReady() {
 
 describe('MemberScreen', () => {
   it('shows an empty profile state', async () => {
-    mockBackend({ [HEALTH]: () => jsonResponse(health), [STATUS]: configured, [TYPES]: typesRoute });
+    mockBackend({
+      [HEALTH]: () => jsonResponse(health),
+      [STATUS]: configured,
+      [TYPES]: typesRoute,
+    });
     await renderWithStatus(<MemberScreen />, seedParty([{ name: 'Ann' }]));
     expect(screen.getByText('No interests yet')).toBeTruthy();
   });
 
   it('shows a not-found state for a removed person', async () => {
     mockId = 'gone';
-    mockBackend({ [HEALTH]: () => jsonResponse(health), [STATUS]: configured, [TYPES]: typesRoute });
+    mockBackend({
+      [HEALTH]: () => jsonResponse(health),
+      [STATUS]: configured,
+      [TYPES]: typesRoute,
+    });
     await renderWithStatus(<MemberScreen />, seedParty([{ name: 'Ann' }]));
     expect(screen.getByText('Profile not found')).toBeTruthy();
     await fireEvent.press(screen.getByLabelText('Back to party'));
@@ -144,7 +153,11 @@ describe('MemberScreen', () => {
   });
 
   it('renames the person and rejects a duplicate name', async () => {
-    mockBackend({ [HEALTH]: () => jsonResponse(health), [STATUS]: configured, [TYPES]: typesRoute });
+    mockBackend({
+      [HEALTH]: () => jsonResponse(health),
+      [STATUS]: configured,
+      [TYPES]: typesRoute,
+    });
     await renderWithStatus(<MemberScreen />, seedParty([{ name: 'Ann' }, { name: 'Bo' }]));
     await fireEvent.press(screen.getByLabelText('Edit name'));
     await fireEvent.changeText(screen.getByLabelText('Name'), 'bo');

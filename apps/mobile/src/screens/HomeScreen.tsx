@@ -64,7 +64,8 @@ export function HomeScreen() {
           </View>
         ))}
         <Text style={[typography.caption, styles.ink]}>
-          Smart group planning, which weighs everyone's tastes into a shared plan, is not built yet.
+          Smart group planning, which weighs everyone&apos;s tastes into a shared plan, is not built
+          yet.
         </Text>
       </Card>
 

@@ -41,11 +41,7 @@ export function MemberCard({ member, onOpen, onRemove }: Props) {
         </View>
       )}
 
-      <Button
-        label={`Open ${member.displayName}'s profile`}
-        variant="secondary"
-        onPress={onOpen}
-      />
+      <Button label={`Open ${member.displayName}'s profile`} variant="secondary" onPress={onOpen} />
       {confirming ? (
         <View style={styles.chips}>
           <Button label={`Confirm remove ${member.displayName}`} onPress={onRemove} />

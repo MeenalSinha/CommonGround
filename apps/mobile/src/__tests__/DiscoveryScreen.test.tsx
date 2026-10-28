@@ -17,7 +17,11 @@ const typesRoute = () => jsonResponse({ types: ENTITY_TYPES });
 
 const A = entity('A', 'Alpha Band');
 const B = entity('B', 'Beta Film', 'urn:entity:movie');
-const party = () => seedParty([{ name: 'Ann', interests: [A] }, { name: 'Bo', interests: [A, B] }]);
+const party = () =>
+  seedParty([
+    { name: 'Ann', interests: [A] },
+    { name: 'Bo', interests: [A, B] },
+  ]);
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -79,15 +83,17 @@ describe('DiscoveryScreen', () => {
       [TYPES]: typesRoute,
       [RECS]: (url) => {
         calls.push(url);
-        return jsonResponse(recommendationsPayload([entity('R1', 'Suggested Film', 'urn:entity:movie')]));
+        return jsonResponse(
+          recommendationsPayload([entity('R1', 'Suggested Film', 'urn:entity:movie')]),
+        );
       },
     });
     await renderWithStatus(<DiscoveryScreen />, party());
     await pickMovie();
     await waitFor(() =>
-      expect(screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled).toBe(
-        false,
-      ),
+      expect(
+        screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled,
+      ).toBe(false),
     );
     await fireEvent.press(screen.getByLabelText('Find shared experiences'));
     expect(await screen.findByText('Suggested Film')).toBeTruthy();
@@ -117,9 +123,9 @@ describe('DiscoveryScreen', () => {
     await renderWithStatus(<DiscoveryScreen />, party());
     await pickMovie();
     await waitFor(() =>
-      expect(screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled).toBe(
-        false,
-      ),
+      expect(
+        screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled,
+      ).toBe(false),
     );
     await fireEvent.press(screen.getByLabelText('Find shared experiences'));
     expect(await screen.findByText('Qloo is rate limiting requests.')).toBeTruthy();
@@ -139,15 +145,17 @@ describe('DiscoveryScreen', () => {
       [TYPES]: typesRoute,
       [RECS]: (url) => {
         calls.push(url);
-        return jsonResponse(recommendationsPayload([entity('R1', 'Suggested Film', 'urn:entity:movie')]));
+        return jsonResponse(
+          recommendationsPayload([entity('R1', 'Suggested Film', 'urn:entity:movie')]),
+        );
       },
     });
     await renderWithStatus(<DiscoveryScreen />, party());
     await pickMovie();
     await waitFor(() =>
-      expect(screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled).toBe(
-        false,
-      ),
+      expect(
+        screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled,
+      ).toBe(false),
     );
     await fireEvent.press(screen.getByLabelText('Find shared experiences'));
     await screen.findByText('Suggested Film');
@@ -164,7 +172,10 @@ describe('DiscoveryScreen', () => {
   it('refuses more than 20 interests instead of silently truncating', async () => {
     const many = Array.from({ length: 21 }, (_, i) => entity(`E${i}`, `Thing ${i}`));
     mockBackend({ [HEALTH]: () => jsonResponse(health), [STATUS]: ready, [TYPES]: typesRoute });
-    await renderWithStatus(<DiscoveryScreen />, seedParty([{ name: 'Ann', interests: many }, { name: 'Bo' }]));
+    await renderWithStatus(
+      <DiscoveryScreen />,
+      seedParty([{ name: 'Ann', interests: many }, { name: 'Bo' }]),
+    );
     await pickMovie();
     expect(await screen.findByText(/Deselect 1/)).toBeTruthy();
     expect(screen.getByLabelText('Find shared experiences').props.accessibilityState.disabled).toBe(

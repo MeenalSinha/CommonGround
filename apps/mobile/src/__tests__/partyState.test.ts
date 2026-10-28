@@ -4,18 +4,25 @@ import {
   fingerprint,
   groupInterests,
   initialPartyState,
+  memberNamesFor,
   partyReducer,
   snapshotSignals,
   validateMemberName,
   validatePartyName,
   type DiscoveryRun,
+  type PartyState,
 } from '@/state/party';
 import { entity, recommendationsPayload, seedParty } from '@/testing/fixtures';
 
 const A = entity('A', 'Alpha');
 const B = entity('B', 'Beta', 'urn:entity:movie');
 
-const ready = (state = seedParty([{ name: 'Ann', interests: [A] }, { name: 'Bo', interests: [B] }])) => ({
+const ready = (
+  state = seedParty([
+    { name: 'Ann', interests: [A] },
+    { name: 'Bo', interests: [B] },
+  ]),
+) => ({
   party: state.party,
   searchEnabled: true,
   searchReason: null,
@@ -70,7 +77,10 @@ describe('party reducer', () => {
   });
 
   it('removes interests and invalidates stale discovery results', () => {
-    let s = seedParty([{ name: 'Ann', interests: [A] }]);
+    let s = partyReducer(seedParty([{ name: 'Ann', interests: [A] }]), {
+      type: 'discovery/target',
+      targetType: 'urn:entity:movie',
+    });
     const run: DiscoveryRun = {
       fingerprint: fingerprint('urn:entity:movie', ['A']),
       targetType: 'urn:entity:movie',
@@ -93,7 +103,9 @@ describe('party reducer', () => {
       response: recommendationsPayload([]),
     };
     s = partyReducer({ ...s, targetType: 'urn:entity:movie' }, { type: 'discovery/run', run });
-    expect(partyReducer(s, { type: 'discovery/target', targetType: 'urn:entity:artist' }).run).toBeNull();
+    expect(
+      partyReducer(s, { type: 'discovery/target', targetType: 'urn:entity:artist' }).run,
+    ).toBeNull();
     expect(partyReducer(s, { type: 'member/remove', id: 'm2' }).run).toBeNull();
   });
 
@@ -109,15 +121,21 @@ describe('party reducer', () => {
 
 describe('group interests and discovery signals', () => {
   it('de-duplicates shared entities but remembers who chose them', () => {
-    const s = seedParty([{ name: 'Ann', interests: [A] }, { name: 'Bo', interests: [A, B] }]);
+    const s = seedParty([
+      { name: 'Ann', interests: [A] },
+      { name: 'Bo', interests: [A, B] },
+    ]);
     const grouped = groupInterests(s.party);
     expect(grouped.map((g) => g.entity.id)).toEqual(['A', 'B']);
     expect(grouped[0]?.memberIds).toEqual(['m1', 'm2']);
-    expect(snapshotSignals(s.party!, ['A'])[0]?.memberNames).toEqual(['Ann', 'Bo']);
+    expect(snapshotSignals(s.party!, ['A'])[0]?.memberIds).toEqual(['m1', 'm2']);
   });
 
   it('excludes removed participants from signals', () => {
-    let s = seedParty([{ name: 'Ann', interests: [A] }, { name: 'Bo', interests: [B] }]);
+    let s = seedParty([
+      { name: 'Ann', interests: [A] },
+      { name: 'Bo', interests: [B] },
+    ]);
     s = partyReducer(s, { type: 'member/remove', id: 'm2' });
     expect(groupInterests(s.party).map((g) => g.entity.id)).toEqual(['A']);
   });
@@ -134,10 +152,18 @@ describe('group interests and discovery signals', () => {
 
   it('blocks: no party, one person, no interests, unavailable Qloo, bad category', () => {
     expect(discoveryBlockers({ ...ready(), party: null })).not.toEqual([]);
-    expect(discoveryBlockers(ready(seedParty([{ name: 'Ann', interests: [A] }]))).join(' ')).toMatch(/two people/);
-    expect(discoveryBlockers(ready(seedParty([{ name: 'Ann' }, { name: 'Bo' }]))).join(' ')).toMatch(/at least one interest/i);
-    expect(discoveryBlockers({ ...ready(), searchEnabled: false, searchReason: 'Qloo is off' })).toContain('Qloo is off');
-    expect(discoveryBlockers({ ...ready(), targetType: 'urn:entity:nope' }).join(' ')).toMatch(/not supported/);
+    expect(
+      discoveryBlockers(ready(seedParty([{ name: 'Ann', interests: [A] }]))).join(' '),
+    ).toMatch(/two people/);
+    expect(
+      discoveryBlockers(ready(seedParty([{ name: 'Ann' }, { name: 'Bo' }]))).join(' '),
+    ).toMatch(/at least one interest/i);
+    expect(
+      discoveryBlockers({ ...ready(), searchEnabled: false, searchReason: 'Qloo is off' }),
+    ).toContain('Qloo is off');
+    expect(discoveryBlockers({ ...ready(), targetType: 'urn:entity:nope' }).join(' ')).toMatch(
+      /not supported/,
+    );
     expect(discoveryBlockers({ ...ready(), supportedTypes: null }).join(' ')).toMatch(/not loaded/);
   });
 
@@ -145,5 +171,62 @@ describe('group interests and discovery signals', () => {
     const ids = Array.from({ length: MAX_SIGNAL_IDS + 2 }, (_, i) => `E${i}`);
     const blockers = discoveryBlockers({ ...ready(), signalIds: ids });
     expect(blockers.join(' ')).toMatch(/Deselect 2/);
+  });
+});
+
+describe('stale discovery runs (Phase 3 audit repair)', () => {
+  const run = (targetType: string, entityId: string, memberIds: string[]): DiscoveryRun => ({
+    fingerprint: `${targetType}|${entityId}`,
+    targetType,
+    signals: [{ entityId, name: 'Alpha', type: null, memberIds }],
+    response: recommendationsPayload([]),
+  });
+  const base = (): PartyState =>
+    partyReducer(seedParty([{ name: 'Ann', interests: [A] }, { name: 'Bo' }]), {
+      type: 'discovery/target',
+      targetType: 'urn:entity:movie',
+    });
+
+  it('accepts a run that matches the current category and contributors', () => {
+    const s = partyReducer(base(), {
+      type: 'discovery/run',
+      run: run('urn:entity:movie', 'A', ['m1']),
+    });
+    expect(s.run).not.toBeNull();
+  });
+
+  it('rejects a late run for a category that is no longer selected', () => {
+    const s = partyReducer(base(), {
+      type: 'discovery/run',
+      run: run('urn:entity:book', 'A', ['m1']),
+    });
+    expect(s.run).toBeNull();
+  });
+
+  it('rejects a run whose contributor set no longer matches the party', () => {
+    const s = partyReducer(base(), {
+      type: 'discovery/run',
+      run: run('urn:entity:movie', 'A', ['m1', 'm2']),
+    });
+    expect(s.run).toBeNull();
+  });
+
+  it('rejects a run built from an interest that was removed', () => {
+    const removed = partyReducer(base(), {
+      type: 'interest/remove',
+      memberId: 'm1',
+      entityId: 'A',
+    });
+    const s = partyReducer(removed, {
+      type: 'discovery/run',
+      run: run('urn:entity:movie', 'A', ['m1']),
+    });
+    expect(s.run).toBeNull();
+  });
+
+  it('keeps contributor names current after a rename', () => {
+    const renamed = partyReducer(base(), { type: 'member/rename', id: 'm1', name: 'Annie' });
+    const snap = snapshotSignals(renamed.party!, ['A'])[0]!;
+    expect(memberNamesFor(renamed.party, snap.memberIds)).toEqual(['Annie']);
   });
 });

@@ -37,7 +37,8 @@ export interface SignalSnapshot {
   entityId: string;
   name: string;
   type: string | null;
-  memberNames: string[];
+  /** Who contributed this interest, by id. Names are resolved live so a rename cannot go stale. */
+  memberIds: string[];
 }
 
 /** One completed recommendation request, with the inputs that produced it. */
@@ -204,8 +205,23 @@ export function partyReducer(state: PartyState, action: PartyAction): PartyState
       if (state.targetType === action.targetType) return state;
       return { ...state, targetType: action.targetType, run: null };
     case 'discovery/run':
-      return { ...state, run: action.run };
+      // A late response must not overwrite state it was not built from (defect repaired in Phase 4 audit).
+      return runIsCurrent(state, action.run) ? { ...state, run: action.run } : state;
   }
+}
+
+/** A run is accepted only for the current category and only if every signal is still in the party. */
+export function runIsCurrent(state: PartyState, run: DiscoveryRun): boolean {
+  if (!state.party || state.targetType !== run.targetType) return false;
+  const current = new Map(groupInterests(state.party).map((g) => [g.entity.id, g.memberIds]));
+  return run.signals.every((s) => {
+    const ids = current.get(s.entityId);
+    return (
+      ids !== undefined &&
+      ids.length === s.memberIds.length &&
+      ids.every((id) => s.memberIds.includes(id))
+    );
+  });
 }
 
 function sameInterests(a: Party, b: Party): boolean {
@@ -249,10 +265,15 @@ export function snapshotSignals(party: Party, entityIds: string[]): SignalSnapsh
       entityId: g.entity.id,
       name: g.entity.name,
       type: g.entity.type,
-      memberNames: g.memberIds
-        .map((id) => party.members.find((m) => m.id === id)?.displayName)
-        .filter((n): n is string => Boolean(n)),
+      memberIds: [...g.memberIds],
     }));
+}
+
+/** Resolves member ids to their current display names, skipping anyone no longer in the party. */
+export function memberNamesFor(party: Party | null, memberIds: string[]): string[] {
+  return memberIds
+    .map((id) => party?.members.find((m) => m.id === id)?.displayName)
+    .filter((n): n is string => Boolean(n));
 }
 
 export interface DiscoveryInputs {

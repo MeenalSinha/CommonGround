@@ -25,7 +25,9 @@ export function Logo({ compact = false }: { compact?: boolean }) {
           style={[styles.overlap, { width: d * 0.5, height: d * 0.8, left: d * 0.5, top: d * 0.1 }]}
         />
       </View>
-      <Text style={[compact ? typography.title : typography.display, styles.word]}>CommonGround</Text>
+      <Text style={[compact ? typography.title : typography.display, styles.word]}>
+        CommonGround
+      </Text>
     </View>
   );
 }
