@@ -1,0 +1,41 @@
+# Secrets and local environment (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.qloo_verification.json
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+npm-debug.log*
+# Expo Continuous Native Generation: native folders are generated, not hand-edited
+/apps/mobile/ios/
+/apps/mobile/android/
+*.hbc
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+
+# Backup of the former nested apps/mobile/.git (never had commits); see docs/PHASE_4_PRE_UPGRADE_AUDIT.md
+/.maintenance/
