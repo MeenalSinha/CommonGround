@@ -144,6 +144,7 @@ export function PartyProvider({
   const gatherRunning = useRef(false);
   const mounted = useRef(true);
   const persistor = useRef<Persistor | null>(null);
+  const saveError = useRef(false);
   const ready = persistence.status === 'ready';
 
   useEffect(() => {
@@ -159,9 +160,16 @@ export function PartyProvider({
     let cancelled = false;
     persistor.current = createPersistor(storage, {
       debounceMs: persistDebounceMs,
-      onError: (message) => mounted.current && setPersistence((p) => ({ ...p, error: message })),
-      onSaved: () =>
-        mounted.current && setPersistence((p) => (p.error ? { ...p, error: null } : p)),
+      onError: (message) => {
+        saveError.current = true;
+        if (mounted.current) setPersistence((p) => ({ ...p, error: message }));
+      },
+      // Only touch state when a previous error needs clearing; a routine successful save changes nothing.
+      onSaved: () => {
+        if (!saveError.current) return;
+        saveError.current = false;
+        if (mounted.current) setPersistence((p) => ({ ...p, error: null }));
+      },
     });
     void loadSession(storage).then((result) => {
       if (cancelled) return;

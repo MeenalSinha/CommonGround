@@ -135,7 +135,9 @@ describe('PartyProvider persistence', () => {
     await screen.findByText('status:ready');
     await act(async () => {
       captured!.createParty('Crew');
-      await new Promise((r) => setTimeout(r, 30)); // let the failing save settle inside act
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 30)); // the debounced save runs and fails here
     });
     expect(screen.getByText(/error:Your latest changes could not be saved/)).toBeTruthy();
     expect(screen.getByText('party:Crew')).toBeTruthy();
