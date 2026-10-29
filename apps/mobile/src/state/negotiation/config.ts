@@ -20,6 +20,7 @@ export const discovery = {
     'qloo_rate_limited',
     'qloo_not_configured',
     'qloo_auth_failed',
+    'qloo_unreachable',
     'backend_unreachable',
     'backend_timeout',
   ] as readonly string[],

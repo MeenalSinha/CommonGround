@@ -29,12 +29,13 @@ describe('HomeScreen', () => {
     await screen.findByText('Backend online'); // let the status check settle
   });
 
-  it('describes what exists today and marks group planning as coming soon', async () => {
+  it('describes what exists today and says planning with real data needs a Qloo key', async () => {
     backendUp();
     await renderWithStatus(<HomeScreen />);
-    expect(screen.getByText('Planning: coming soon')).toBeTruthy();
+    expect(screen.getByText('Planning: live data needs a Qloo key')).toBeTruthy();
     expect(screen.getByText(/Create a party and add your people/)).toBeTruthy();
-    expect(screen.getByText(/smart group planning.*not built yet/i)).toBeTruthy();
+    expect(screen.getByText(/Plan together: record who is in/)).toBeTruthy();
+    expect(screen.getByText(/saved on this device only.*not shared/i)).toBeTruthy();
     await screen.findByText('Backend online');
   });
 

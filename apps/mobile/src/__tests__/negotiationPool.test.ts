@@ -220,6 +220,24 @@ describe('invalidation (reconcile)', () => {
   });
 });
 
+describe('session lifecycle', () => {
+  it('starting twice keeps the first session (a restored session is never replaced)', () => {
+    const s = threeFriends();
+    const again = send(s, { type: 'negotiation/start', id: 'other', now: NOW });
+    expect(again).toBe(s);
+    expect(session(again).id).toBe('s1');
+  });
+  it('does not start without a category or a party', () => {
+    const noTarget = seedParty([{ name: 'Ann' }]);
+    expect(send(noTarget, { type: 'negotiation/start', id: 'x', now: NOW }).negotiation).toBeNull();
+  });
+  it('reset clears the session but keeps the party', () => {
+    const s = send(threeFriends(), { type: 'negotiation/reset' });
+    expect(s.negotiation).toBeNull();
+    expect(s.party?.members).toHaveLength(3);
+  });
+});
+
 describe('eligibility', () => {
   it('a pass or unsure is not a hard exclusion; an explicit exclude is', () => {
     let s = threeFriends();

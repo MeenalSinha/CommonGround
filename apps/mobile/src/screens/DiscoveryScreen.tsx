@@ -211,6 +211,13 @@ export function DiscoveryScreen() {
 
       {shownRun ? <Results run={shownRun} party={party} /> : null}
 
+      <Button
+        label="Plan together"
+        variant="secondary"
+        disabled={!targetType}
+        onPress={() => router.push('/negotiate')}
+        accessibilityHint="Opens the group negotiation for this category"
+      />
       <Button label="Back to party" variant="secondary" onPress={() => router.back()} />
     </Screen>
   );

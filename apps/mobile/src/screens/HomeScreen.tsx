@@ -15,11 +15,12 @@ const STEPS = [
   'Create a party and add your people.',
   'Search Qloo for what each person loves and add it to their profile.',
   'Discover experiences Qloo suggests from the interests you choose.',
+  'Plan together: record who is in, who is unsure and who would rather pass, then build and adjust a shared plan.',
 ] as const;
 
 export function HomeScreen() {
   const router = useRouter();
-  const { state } = useParty();
+  const { state, persistence } = useParty();
   const party = state.party;
 
   return (
@@ -40,6 +41,14 @@ export function HomeScreen() {
           onPress={() => router.push('/party')}
           accessibilityHint={party ? `Opens ${party.name}` : 'Starts a new party'}
         />
+        {party && state.negotiation ? (
+          <Button
+            label={state.negotiation.plan ? 'Continue your plan' : 'Continue planning together'}
+            variant="secondary"
+            onPress={() => router.push(state.negotiation?.plan ? '/plan' : '/negotiate')}
+            accessibilityHint="Opens the saved negotiation"
+          />
+        ) : null}
         <Button
           label="Try an entity search"
           variant="secondary"
@@ -48,12 +57,20 @@ export function HomeScreen() {
         />
       </Card>
 
+      {persistence.notice ? (
+        <Card tone="yellow">
+          <Text style={[typography.body, styles.ink]} accessibilityRole="alert">
+            {persistence.notice}
+          </Text>
+        </Card>
+      ) : null}
+
       <Card tone="lavender">
         <View style={styles.header}>
           <Text style={[typography.title, styles.ink]} accessibilityRole="header">
             How it works
           </Text>
-          <StatusPill label="Planning: coming soon" tone="neutral" />
+          <StatusPill label="Planning: live data needs a Qloo key" tone="neutral" />
         </View>
         {STEPS.map((step, index) => (
           <View key={step} style={styles.step}>
@@ -64,8 +81,8 @@ export function HomeScreen() {
           </View>
         ))}
         <Text style={[typography.caption, styles.ink]}>
-          Smart group planning, which weighs everyone&apos;s tastes into a shared plan, is not built
-          yet.
+          Plans are saved on this device only and are not shared with anyone. Suggestions come from
+          Qloo, so planning with real data starts once a Qloo key is connected.
         </Text>
       </Card>
 
