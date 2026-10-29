@@ -85,3 +85,13 @@ exponential backoff and jitter. 401, 403, 429, 400 and 500 are never retried. A 
 - Whether a 404 on `/v2/insights` can mean "no results". It is documented only for `/search`, so Insights 404 is
   treated as an upstream error.
 - Authenticated behavior of every route above. No authenticated request has been made.
+
+
+## Notes for Phase 4 consumers (no contract change)
+
+Phase 4 made **no backend change**. The mobile app calls `GET /api/v1/qloo/insights/recommendations` once per distinct
+signal set (one per participant with resolved interests, one for the group), sequentially, always with `offset` 0 and
+`limit` 10. It records each item's 1-based position in the response order. Whether that order means "most relevant
+first" is **not documented here and is unverified**; the app treats it as a weak signal (rank fusion) and never shows
+it as a score. Prices, durations, opening hours and coordinates are not part of this contract, and the app never
+displays any as API data; user-typed values are labelled as the user's own.

@@ -113,6 +113,17 @@ describe('PartyProvider persistence', () => {
     await waitFor(() => expect(storage.dump()[cfg.storageKey]).toBeUndefined());
   });
 
+  it('the Party screen’s “Start over” (resetParty) also removes the saved copy', async () => {
+    const storage = memoryStorage({ [cfg.storageKey]: saved() });
+    await mount(storage);
+    await screen.findByText('plan:3');
+    await act(async () => {
+      captured!.resetParty();
+    });
+    await waitFor(() => expect(storage.dump()[cfg.storageKey]).toBeUndefined());
+    expect(screen.getByText('party:none')).toBeTruthy();
+  });
+
   it('never overwrites a good save with an empty state before the restore finishes', async () => {
     const storage = memoryStorage({ [cfg.storageKey]: saved() });
     const spy = jest.spyOn(storage, 'setItem');

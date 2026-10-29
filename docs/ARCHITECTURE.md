@@ -62,8 +62,27 @@ CORS is an explicit allow-list (empty by default); native apps do not use CORS.
   that keeps route files separate from non-route code.
 - No empty placeholder directories were created. `api/` holds routes and dependencies; `schemas/` holds public models.
 
-## Anticipated future flow (not implemented)
+## Group negotiation and planning (Phase 4, implemented)
 
-User interests, resolved to Qloo entities (Phase 1), feed Insights requests per participant. A later planning engine
-will reconcile the returned entities, tags and provenance across a group with budget, location and exclusion
-constraints. None of that engine exists yet; Phase 1 only supplies verified inputs and their provenance.
+The mobile app owns negotiation; the backend is unchanged. `PartyState` holds the party, category and a
+`NegotiationSession`. `state/store.ts` routes party actions through the Phase 3 reducer and then reconciles the session
+(so edits, removals and category changes invalidate stale evidence); negotiation and plan actions go to
+`state/negotiation/reducer.ts`.
+
+```
+interests -> queries (per person + group) -> orchestrator (sequential, existing integrationApi.recommendations)
+          -> query records (status, order, provenance) -> candidate pool (dedupe by Qloo id)
+          -> rank fusion + explicit feedback, hard constraints as filters -> planner -> plan
+          -> validation / status -> explicit finalize
+```
+
+Engine modules are pure (no React, no network); the orchestrator is the only part that calls the network, through the
+existing client. Local persistence (`state/persistence.ts`) is a versioned, validated, ordered-write layer over a
+`SessionStorage` interface (AsyncStorage implementation). It is on-device only, with no backend database or sync.
+Details, the ranking method and limits: [PHASE_4_IMPLEMENTATION.md](PHASE_4_IMPLEMENTATION.md).
+
+## Not implemented
+
+Accounts, cloud or multi-device sync, shared voting, verified venue data (hours, prices, travel times), and any LLM
+layer. If an LLM is added later it must stay server-side, receive only real candidates, and have its output validated by
+the deterministic planner, which already enforces the hard constraints.

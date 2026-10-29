@@ -1,3 +1,7 @@
+> **Update (Phase 4):** this report predates the audit. Its tests were *not* run when it was written; they were run in
+> Phase 4 (3 test defects and 3 app defects were found and repaired) and persistence now exists. See
+> [PHASE_4_PRE_UPGRADE_AUDIT.md](PHASE_4_PRE_UPGRADE_AUDIT.md) and [PHASE_4_IMPLEMENTATION.md](PHASE_4_IMPLEMENTATION.md).
+
 # Phase 3 implementation: party, taste profiles, cultural discovery
 
 **Status: implemented but UNVERIFIED.** Nothing was installed or run (see `PHASE_3_PRE_UPGRADE_AUDIT.md`).

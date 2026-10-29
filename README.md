@@ -9,12 +9,13 @@ enjoy, using Qloo's cultural intelligence to discover connections between intere
 
 | Item | Status |
 |------|--------|
-| Phase 0 (foundation) | Implemented. Re-audit by reading only; checks not re-run in the latest session. |
+| Phase 0 (foundation) | Implemented. Backend checks re-run and passing (73 tests). |
 | Phase 1 (Qloo integration) | **Implementation complete, pending live Qloo verification.** No API key has been issued, so no authenticated request has ever succeeded. |
-| Phase 2 (mobile UI foundation) | **Implemented, not yet verified.** Written without running tests/lint/Expo; run `make check` first. See [Phase 2 report](docs/PHASE_2_IMPLEMENTATION.md). |
-| Phase 3 (party, taste profiles, discovery) | **Implemented, not yet verified.** In-memory party (lost on restart); discovery needs a Qloo key. See [Phase 3 report](docs/PHASE_3_IMPLEMENTATION.md). |
-| Qloo API key | Not configured. The app runs honestly in keyless mode. |
-| Not built yet | Group negotiation engine, itinerary generation, persistence across restarts, accounts. |
+| Phase 2 (mobile UI foundation) | Implemented and covered by Jest, lint, typecheck and an Android Metro bundle. **Not viewed on a device or simulator.** |
+| Phase 3 (party, taste profiles, discovery) | Implemented; audited and repaired in Phase 4 ([audit](docs/PHASE_4_PRE_UPGRADE_AUDIT.md)). Discovery needs a Qloo key. |
+| Phase 4 (negotiation engine, adaptive plan, local persistence) | **Implementation complete, pending live Qloo verification.** Verified with mocked HTTP only (170 mobile tests). Persistence verified through the AsyncStorage library mock, not on a device. See [Phase 4 report](docs/PHASE_4_IMPLEMENTATION.md). |
+| Qloo API key | Not configured. The app runs honestly in keyless mode: no candidates, no plan. |
+| Not built yet | Accounts, cloud sync, shared or multi-device voting, verified venue data (hours, prices, travel times), an LLM layer. |
 
 ## Stack
 
@@ -70,12 +71,16 @@ the official key-acquisition link are in [docs/QLOO_SETUP.md](docs/QLOO_SETUP.md
 
 - Live Qloo behavior is unverified; the `/search` response shape and the hackathon base URL are assumptions listed in
   [docs/API_CONTRACT.md](docs/API_CONTRACT.md) section 3.
-- The Phase 2 UI has not been run, tested or viewed on a device; `apps/mobile/.git` is a stray nested repository.
-- The UI has not been viewed on a device. The CI workflow has not been executed.
+- Nothing has been run on a device or simulator; screens were never viewed. The CI workflow has not been executed.
+- Plans and parties are saved on this device only (AsyncStorage, unencrypted). Restart durability is verified through a
+  library mock, not on hardware.
+- Ranking weights are untuned heuristics; Qloo's response ordering semantics are unverified. See the
+  [Phase 4 report](docs/PHASE_4_IMPLEMENTATION.md) section 14.
+- The former nested `apps/mobile/.git` (no commits) was moved to `.maintenance/` (git-ignored); the repo root is now one git repository.
 - Starlette's test client prints a deprecation warning about `httpx`; harmless for now.
 
 ## Documentation
 
 [Audit](docs/PROJECT_AUDIT.md), [Requirements](docs/PRODUCT_REQUIREMENTS.md), [Architecture](docs/ARCHITECTURE.md),
 [API contract](docs/API_CONTRACT.md), [Qloo setup](docs/QLOO_SETUP.md), [Phase 0 report](docs/PHASE_0_REPORT.md),
-[Phase 1 report](docs/PHASE_1_REPORT.md), [Phase 2 audit](docs/PHASE_2_PRE_UPGRADE_AUDIT.md), [Phase 2 implementation](docs/PHASE_2_IMPLEMENTATION.md), [Phase 3 audit](docs/PHASE_3_PRE_UPGRADE_AUDIT.md), [Phase 3 implementation](docs/PHASE_3_IMPLEMENTATION.md). Fonts (Fredoka, Nunito) come from `@expo-google-fonts` under OFL-1.1.
+[Phase 1 report](docs/PHASE_1_REPORT.md), [Phase 2 audit](docs/PHASE_2_PRE_UPGRADE_AUDIT.md), [Phase 2 implementation](docs/PHASE_2_IMPLEMENTATION.md), [Phase 3 audit](docs/PHASE_3_PRE_UPGRADE_AUDIT.md), [Phase 3 implementation](docs/PHASE_3_IMPLEMENTATION.md), [Phase 4 audit](docs/PHASE_4_PRE_UPGRADE_AUDIT.md), [Phase 4 implementation](docs/PHASE_4_IMPLEMENTATION.md). Fonts (Fredoka, Nunito) come from `@expo-google-fonts` under OFL-1.1.
