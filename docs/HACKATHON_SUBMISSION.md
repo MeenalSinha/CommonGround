@@ -6,6 +6,14 @@
 ## Tagline
 *Different tastes. One unforgettable adventure.*
 
+## Live Production Deployment (Google Cloud)
+- **Live Web Application:** [https://commonground-web-799175996958.us-central1.run.app](https://commonground-web-799175996958.us-central1.run.app)
+- **Live Backend API:** [https://commonground-backend-799175996958.us-central1.run.app](https://commonground-backend-799175996958.us-central1.run.app)
+- **API Health Check:** [https://commonground-backend-799175996958.us-central1.run.app/health](https://commonground-backend-799175996958.us-central1.run.app/health)
+- **API Readiness / Qloo Status:** [https://commonground-backend-799175996958.us-central1.run.app/ready](https://commonground-backend-799175996958.us-central1.run.app/ready)
+- **Google Cloud Project ID:** `spatialguard` (Region: `us-central1`)
+- **GitHub Repository:** [https://github.com/MeenalSinha/CommonGround](https://github.com/MeenalSinha/CommonGround)
+
 ---
 
 ## 1. Problem Statement

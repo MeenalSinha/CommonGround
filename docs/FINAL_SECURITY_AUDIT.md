@@ -74,3 +74,4 @@
 ## 5. Security Sign-Off
 
 The CommonGround application complies with production security standards for containerized microservices and mobile client applications.
+

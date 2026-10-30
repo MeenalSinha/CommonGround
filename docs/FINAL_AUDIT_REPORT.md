@@ -21,6 +21,9 @@ Following rigorous inspection of all source code, automated test execution, stat
 - **Multi-Platform Bundling:** Android Hermes bundle exported (1,254 modules); Web SPA exported (907 modules) with Vercel routing configuration.
 - **Container Hardening:** Non-root container (`appuser:appgroup`) verified with automated healthcheck probe.
 - **CI/CD Status:** GitHub Actions workflow fully green (`success` on latest commit `f33b216`).
+- **Live Google Cloud Deployment:** Both services are live and serving 100% of traffic on Google Cloud Run (Project `spatialguard`, Region `us-central1`):
+  - **Live Web Client:** `https://commonground-web-799175996958.us-central1.run.app`
+  - **Live Backend API:** `https://commonground-backend-799175996958.us-central1.run.app`
 
 ---
 
@@ -150,3 +153,4 @@ Result recorded in `backend/.qloo_verification.json`:
 ## 7. Final Audit Conclusion
 
 The CommonGround codebase satisfies all architectural, engineering, functional, and hackathon submission requirements. The application features zero mock fallback in live mode, verified multi-domain intelligence, multi-platform deployment readiness, and complete CI verification.
+
