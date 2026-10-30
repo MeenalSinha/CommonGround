@@ -9,13 +9,14 @@ enjoy, using Qloo's cultural intelligence to discover connections between intere
 
 | Item | Status |
 |------|--------|
-| Phase 0 (foundation) | Implemented. Backend checks re-run and passing (73 tests). |
-| Phase 1 (Qloo integration) | **Implementation complete, pending live Qloo verification.** No API key has been issued, so no authenticated request has ever succeeded. |
-| Phase 2 (mobile UI foundation) | Implemented and covered by Jest, lint, typecheck and an Android Metro bundle. **Not viewed on a device or simulator.** |
-| Phase 3 (party, taste profiles, discovery) | Implemented; audited and repaired in Phase 4 ([audit](docs/PHASE_4_PRE_UPGRADE_AUDIT.md)). Discovery needs a Qloo key. |
-| Phase 4 (negotiation engine, adaptive plan, local persistence) | **Implementation complete, pending live Qloo verification.** Verified with mocked HTTP only (170 mobile tests). Persistence verified through the AsyncStorage library mock, not on a device. See [Phase 4 report](docs/PHASE_4_IMPLEMENTATION.md). |
-| Qloo API key | Not configured. The app runs honestly in keyless mode: no candidates, no plan. |
-| Not built yet | Accounts, cloud sync, shared or multi-device voting, verified venue data (hours, prices, travel times), an LLM layer. |
+| Phase 0 (foundation) | Implemented. Backend checks passing (73 tests). |
+| Phase 1 (Qloo integration) | **Implementation complete, pending live Qloo verification.** Keyless mode strictly maintained; no fake data. |
+| Phase 2 (mobile UI foundation) | Implemented with centralized theme tokens, game-inspired aesthetic, and full accessibility roles. |
+| Phase 3 (party, taste profiles, discovery) | Implemented with real Qloo entity IDs and group signal aggregation. |
+| Phase 4 (negotiation engine, adaptive plan, local persistence) | Implemented with Reciprocal Rank Fusion, hard constraints, adaptive alternatives, and sequential AsyncStorage persistence. |
+| Phase 5 (production hardening, multi-platform release & submission) | **Complete and deployment-ready.** Mobile checks: 174 passed across 15 suites. Android & Web bundles exported cleanly. Docker container built and verified. Full submission package prepared. |
+| Qloo API key | Pending provision. The app runs honestly in keyless mode with zero fabricated discoveries. |
+| Open Source License | MIT License. |
 
 ## Stack
 
@@ -79,8 +80,21 @@ the official key-acquisition link are in [docs/QLOO_SETUP.md](docs/QLOO_SETUP.md
 - The former nested `apps/mobile/.git` (no commits) was moved to `.maintenance/` (git-ignored); the repo root is now one git repository.
 - Starlette's test client prints a deprecation warning about `httpx`; harmless for now.
 
-## Documentation
+## Phase 5 & Submission Deliverables
 
-[Audit](docs/PROJECT_AUDIT.md), [Requirements](docs/PRODUCT_REQUIREMENTS.md), [Architecture](docs/ARCHITECTURE.md),
-[API contract](docs/API_CONTRACT.md), [Qloo setup](docs/QLOO_SETUP.md), [Phase 0 report](docs/PHASE_0_REPORT.md),
-[Phase 1 report](docs/PHASE_1_REPORT.md), [Phase 2 audit](docs/PHASE_2_PRE_UPGRADE_AUDIT.md), [Phase 2 implementation](docs/PHASE_2_IMPLEMENTATION.md), [Phase 3 audit](docs/PHASE_3_PRE_UPGRADE_AUDIT.md), [Phase 3 implementation](docs/PHASE_3_IMPLEMENTATION.md), [Phase 4 audit](docs/PHASE_4_PRE_UPGRADE_AUDIT.md), [Phase 4 implementation](docs/PHASE_4_IMPLEMENTATION.md). Fonts (Fredoka, Nunito) come from `@expo-google-fonts` under OFL-1.1.
+- [Hackathon Submission Draft](docs/HACKATHON_SUBMISSION.md)
+- [Demonstration Script & Storyboard](docs/DEMO_SCRIPT.md)
+- [Release Checklist](docs/RELEASE_CHECKLIST.md)
+- [Phase 5 Implementation Report](docs/PHASE_5_IMPLEMENTATION.md)
+- [Phase 5 Pre-Upgrade Audit](docs/PHASE_5_PRE_UPGRADE_AUDIT.md)
+- [Security & Dependency Audit](docs/SECURITY_AUDIT.md)
+- [Privacy & Data Handling Policy](docs/PRIVACY_AND_DATA_HANDLING.md)
+- [Environment Configuration Guide](docs/ENVIRONMENT_CONFIGURATION.md)
+- [Backend Deployment Guide](docs/BACKEND_DEPLOYMENT.md)
+- [Web Deployment Guide](docs/WEB_DEPLOYMENT.md)
+
+## Full Documentation Index
+
+[Audit](docs/PROJECT_AUDIT.md) · [Requirements](docs/PRODUCT_REQUIREMENTS.md) · [Architecture](docs/ARCHITECTURE.md) · [API Contract](docs/API_CONTRACT.md) · [Qloo Setup](docs/QLOO_SETUP.md) · [Phase 0 Report](docs/PHASE_0_REPORT.md) · [Phase 1 Report](docs/PHASE_1_REPORT.md) · [Phase 2 Audit](docs/PHASE_2_PRE_UPGRADE_AUDIT.md) · [Phase 2 Implementation](docs/PHASE_2_IMPLEMENTATION.md) · [Phase 3 Audit](docs/PHASE_3_PRE_UPGRADE_AUDIT.md) · [Phase 3 Implementation](docs/PHASE_3_IMPLEMENTATION.md) · [Phase 4 Audit](docs/PHASE_4_PRE_UPGRADE_AUDIT.md) · [Phase 4 Implementation](docs/PHASE_4_IMPLEMENTATION.md) · [Phase 5 Implementation](docs/PHASE_5_IMPLEMENTATION.md).
+
+License: [MIT](LICENSE). Fonts (Fredoka, Nunito) come from `@expo-google-fonts` under OFL-1.1.

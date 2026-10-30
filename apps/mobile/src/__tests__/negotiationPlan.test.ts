@@ -383,6 +383,21 @@ describe('status and finalization', () => {
   it('plan modes distinguish places from media', () => {
     expect(plan(gen(threeFriends()))!.mode).toBe('shared_experience');
   });
+
+  it('party renaming updates the default plan title automatically', () => {
+    const s = gen(threeFriends());
+    expect(plan(s)!.title).toBe('Test party: shared-experience plan');
+    const renamed = send(s, { type: 'party/rename', name: 'Nomads' });
+    expect(plan(renamed)!.title).toBe('Nomads: shared-experience plan');
+  });
+
+  it('party renaming preserves custom plan title if user renamed the plan', () => {
+    let s = gen(threeFriends());
+    s = send(s, { type: 'plan/rename', title: 'Epic Weekend Plan', now: NOW });
+    expect(plan(s)!.title).toBe('Epic Weekend Plan');
+    const renamed = send(s, { type: 'party/rename', name: 'Nomads' });
+    expect(plan(renamed)!.title).toBe('Epic Weekend Plan');
+  });
 });
 void Q;
 void W;

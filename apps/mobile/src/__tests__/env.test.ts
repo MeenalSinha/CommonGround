@@ -9,6 +9,10 @@ describe('resolveApiBaseUrl', () => {
   it('rejects values without a scheme', () => {
     expect(() => resolveApiBaseUrl('localhost:8000')).toThrow(/http/);
   });
+  it('rejects missing or empty URL in production mode', () => {
+    expect(() => resolveApiBaseUrl(undefined, true)).toThrow(/production/);
+    expect(() => resolveApiBaseUrl('   ', true)).toThrow(/production/);
+  });
 });
 
 describe('entityTypeLabel', () => {

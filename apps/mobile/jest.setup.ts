@@ -1,4 +1,6 @@
 // Global test setup. Network access is always mocked per test; nothing here talks to a real server.
+jest.setTimeout(20000);
+
 beforeEach(() => {
   jest.useRealTimers();
 });

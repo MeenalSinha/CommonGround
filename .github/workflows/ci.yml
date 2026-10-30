@@ -20,6 +20,8 @@ jobs:
       - run: ruff format --check .
       - run: mypy
       - run: pytest   # live tests are excluded by default; no secrets are used in CI
+      - name: Build Docker image
+        run: docker build -t commonground-backend:ci .
 
   mobile:
     runs-on: ubuntu-latest
@@ -35,3 +37,7 @@ jobs:
           cache-dependency-path: apps/mobile/package-lock.json
       - run: npm ci
       - run: npm run check
+      - name: Validate Android bundle export
+        run: npx expo export --platform android
+      - name: Validate Web bundle export
+        run: npx expo export --platform web

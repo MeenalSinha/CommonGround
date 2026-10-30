@@ -1,4 +1,5 @@
 import { ConnectionPanel } from '@/components/ConnectionPanel';
+import { PrivacyPanel } from '@/components/PrivacyPanel';
 import { Screen } from '@/components/Screen';
 import { useBackendStatusModel } from '@/hooks/BackendStatusContext';
 
@@ -7,6 +8,7 @@ export function StatusScreen() {
   return (
     <Screen edges={['left', 'right', 'bottom']}>
       <ConnectionPanel model={model} />
+      <PrivacyPanel />
     </Screen>
   );
 }

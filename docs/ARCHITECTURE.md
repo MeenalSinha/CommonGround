@@ -81,6 +81,23 @@ existing client. Local persistence (`state/persistence.ts`) is a versioned, vali
 `SessionStorage` interface (AsyncStorage implementation). It is on-device only, with no backend database or sync.
 Details, the ranking method and limits: [PHASE_4_IMPLEMENTATION.md](PHASE_4_IMPLEMENTATION.md).
 
+## Production & Multi-Platform Architecture (Phase 5)
+
+Phase 5 hardens CommonGround for production, security, multi-platform client delivery, and automated release verification:
+
+1. **Multi-Platform Client Delivery:**
+   - **Native Android & iOS:** Expo 58 with EAS Build profiles (`eas.json`) producing native Android packages (`dist/` bundles).
+   - **Browser-Accessible Web Demo:** Built with React Native for Web (`react-native-web ~0.21.0`), producing static Single-Page Application assets (`apps/mobile/dist/`) compatible with Vercel, Netlify, and Cloudflare Pages.
+   - **Environment Strictness:** In production builds, `resolveApiBaseUrl` rejects missing backend URLs or localhost fallbacks, preventing misconfigured release bundles.
+2. **Containerized Backend:**
+   - Packaged in a lightweight Debian container (`python:3.11-slim`) executed by an unprivileged system user (`appuser:appgroup`, UID 1001).
+   - Embedded Docker health checks monitor `/health`.
+   - Strict CORS policy dynamically restricts browser origin access via `CORS_ORIGINS`.
+3. **Local Privacy Controls:**
+   - A dedicated `PrivacyPanel` on the `/status` screen explicitly outlines local-only data retention, absence of user tracking, and provides a confirmed "Clear all local data" wipe action.
+4. **Plan Title Auto-Synchronization:**
+   - The root state reducer (`apps/mobile/src/state/store.ts`) synchronizes default plan titles automatically when a party is renamed, while preserving any custom title provided by the user.
+
 ## Not implemented
 
 Accounts, cloud or multi-device sync, shared voting, verified venue data (hours, prices, travel times), and any LLM
