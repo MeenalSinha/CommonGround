@@ -41,6 +41,9 @@ async def test_live_search_and_insights(live_settings: Settings) -> None:
             filter_type="urn:entity:artist", entity_ids=[artist.entity_id], take=3
         )
         assert insights.entities, "insights returned no recommended entities"
-        print(f"live ok: search={len(search.entities)} insights={len(insights.entities)} top={insights.entities[0].name}")
+        top_name = insights.entities[0].name
+        print(
+            f"live ok: search={len(search.entities)} insights={len(insights.entities)} {top_name=}"
+        )
     finally:
         await client.aclose()
