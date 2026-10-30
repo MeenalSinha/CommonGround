@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     qloo_base_url: str = DEFAULT_QLOO_BASE_URL
     qloo_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
     qloo_max_retries: int = Field(default=2, ge=0, le=5)
-    qloo_verify_query: str = Field(default="music", min_length=1, max_length=100)
+    qloo_verify_query: str = Field(default="The Beatles", min_length=1, max_length=100)
 
     backend_port: int = Field(default=8000, ge=1, le=65535)
     log_level: str = "INFO"

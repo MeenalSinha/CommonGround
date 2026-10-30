@@ -10,12 +10,12 @@ enjoy, using Qloo's cultural intelligence to discover connections between intere
 | Item | Status |
 |------|--------|
 | Phase 0 (foundation) | Implemented. Backend checks passing (73 tests). |
-| Phase 1 (Qloo integration) | **Implementation complete, pending live Qloo verification.** Keyless mode strictly maintained; no fake data. |
+| Phase 1 (Qloo integration) | **Live verification complete.** Authenticated requests verified against Qloo API (entity search and cross-domain recommendations). |
 | Phase 2 (mobile UI foundation) | Implemented with centralized theme tokens, game-inspired aesthetic, and full accessibility roles. |
 | Phase 3 (party, taste profiles, discovery) | Implemented with real Qloo entity IDs and group signal aggregation. |
 | Phase 4 (negotiation engine, adaptive plan, local persistence) | Implemented with Reciprocal Rank Fusion, hard constraints, adaptive alternatives, and sequential AsyncStorage persistence. |
-| Phase 5 (production hardening, multi-platform release & submission) | **Complete and deployment-ready.** Mobile checks: 174 passed across 15 suites. Android & Web bundles exported cleanly. Docker container built and verified. Full submission package prepared. |
-| Qloo API key | Pending provision. The app runs honestly in keyless mode with zero fabricated discoveries. |
+| Phase 5 (production hardening, multi-platform release & submission) | **Complete and deployment-ready.** Mobile checks: 175 passed across 15 suites. Android & Web bundles exported cleanly. Docker container built and verified. Full submission package prepared. |
+| Qloo API key | **Configured and verified.** Tested via CLI verification and `pytest -m live`. Keyless fallback remains functional. |
 | Open Source License | MIT License. |
 
 ## Stack

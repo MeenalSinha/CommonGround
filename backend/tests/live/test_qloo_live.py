@@ -28,15 +28,19 @@ def live_settings() -> Settings:
 async def test_live_search_and_insights(live_settings: Settings) -> None:
     client = QlooClient(live_settings)
     try:
-        search = await client.search_entities(live_settings.qloo_verify_query, take=3)
+        search = await client.search_entities(live_settings.qloo_verify_query, take=5)
         assert search.no_results_status is False, "search returned the documented 404 No results"
         assert search.entities, "authenticated search returned no entities"
-        first = search.entities[0]
-        assert first.entity_id and first.name
+        artist = next(
+            (e for e in search.entities if e.entity_type == "urn:entity:artist"),
+            search.entities[0],
+        )
+        assert artist.entity_id and artist.name
 
         insights = await client.get_insights(
-            filter_type="urn:entity:artist", entity_ids=[first.entity_id], take=3
+            filter_type="urn:entity:artist", entity_ids=[artist.entity_id], take=3
         )
-        print(f"live ok: search={len(search.entities)} insights={len(insights.entities)}")
+        assert insights.entities, "insights returned no recommended entities"
+        print(f"live ok: search={len(search.entities)} insights={len(insights.entities)} top={insights.entities[0].name}")
     finally:
         await client.aclose()

@@ -129,7 +129,7 @@ All checks in this section must pass with zero errors before any release tag is 
 | **FastAPI Backend** | OCI Container (`Dockerfile`) | **DEPLOYMENT-READY, PENDING HOSTING CREDENTIALS** |
 | **Mobile App (Android)** | Android Bundle (`dist/`) / EAS APK | **BUILD-READY, PENDING SIGNING KEY / STORE ACCOUNT** |
 | **Web Demo** | Static SPA (`apps/mobile/dist/`) | **DEPLOYMENT-READY, PENDING HOSTING CREDENTIALS** |
-| **Qloo Integration** | Production API Client | **IMPLEMENTATION COMPLETE, PENDING LIVE AUTHENTICATION** |
+| **Qloo Integration** | Production API Client | **LIVE VERIFICATION COMPLETE (Authenticated against hackathon.api.qloo.com)** |
 
 ---
 

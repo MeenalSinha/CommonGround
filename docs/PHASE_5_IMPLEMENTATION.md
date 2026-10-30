@@ -84,7 +84,7 @@ The audit was completed and documented in `docs/PHASE_5_PRE_UPGRADE_AUDIT.md`. E
 | **Contract Implementation** | **COMPLETE** | Entity resolution, recommendations, signal batching, and candidate normalization fully implemented. |
 | **Error & Timeout Handling** | **COMPLETE** | 401, 404, 429, 503, and network timeouts properly handled and mapped to standard error envelopes. |
 | **Keyless Mode Behavior** | **COMPLETE** | Accurately returns 503 `qloo_not_configured` when key is absent; no synthetic results fabricated. |
-| **Live Authenticated Request** | **BLOCKED EXTERNALLY** | Production `QLOO_API_KEY` was not provisioned. Marked as **State 3: IMPLEMENTATION COMPLETE, PENDING LIVE AUTHENTICATION**. |
+| **Live Authenticated Verification** | **LIVE VERIFICATION COMPLETE** | Genuine authenticated requests executed against `hackathon.api.qloo.com`. Both `python -m app.cli verify` and `pytest -m live` passed. Successfully verified live entity search (e.g. *The Beatles*) and cross-domain insights discovery (*The Beatles* → *Park Güell, Mercat de la Boqueria* places in Barcelona; *Inception* → *The Matrix*). |
 
 ---
 
