@@ -4,26 +4,26 @@ import type { Entity } from '@/types/api';
 import { colors, radii, sizes, spacing, typography } from '@/theme';
 import { entityTypeLabel } from '@/utils/format';
 import { Card } from './Card';
-import { entityIcon } from './InterestChip';
+import { Icon, getEntityTypeIconName } from './Icon';
 
 /** Renders only what Qloo returned. Missing fields are omitted, never filled in. */
 export function RecommendationCard({ item }: { item: Entity }) {
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = Boolean(item.image_url) && !imageFailed;
-  const icon = entityIcon(item.type);
+  const iconName = getEntityTypeIconName(item.type ?? '');
   const typeLabel = entityTypeLabel(item.type);
 
   return (
     <Card>
       <View style={styles.topBadgeRow}>
         <View style={styles.categoryBadge}>
-          <Text style={styles.categoryBadgeText}>
-            {icon} {typeLabel}
-          </Text>
+          <Icon name={iconName} size={13} color={colors.lavenderDeep} />
+          <Text style={styles.categoryBadgeText}>{typeLabel}</Text>
         </View>
         {item.popularity ? (
           <View style={styles.popularityBadge}>
-            <Text style={styles.popularityText}>★ {Math.round(item.popularity * 100)}% Match</Text>
+            <Icon name="star" size={11} color={colors.yellowDeep} />
+            <Text style={styles.popularityText}>{Math.round(item.popularity * 100)}% Match</Text>
           </View>
         ) : null}
       </View>
@@ -60,6 +60,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   categoryBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     backgroundColor: colors.creamDeep,
     paddingHorizontal: spacing.sm + 2,
     paddingVertical: spacing.xxs + 1,
@@ -74,6 +77,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   popularityBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     backgroundColor: colors.yellow,
     paddingHorizontal: spacing.sm + 2,
     paddingVertical: spacing.xxs + 1,

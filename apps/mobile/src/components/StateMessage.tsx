@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { colors, radii, sizes, spacing, typography } from '@/theme';
 import { Card } from './Card';
+import { Icon, type IconName } from './Icon';
 import { LoadingBlob } from './LoadingBlob';
 
 export type StateKind = 'loading' | 'empty' | 'unavailable' | 'error' | 'success';
@@ -12,16 +13,19 @@ interface Props {
   title?: string;
 }
 
-const presets = {
-  empty: { tone: 'plain', glyph: '🔍', title: 'Nothing found' },
-  unavailable: { tone: 'yellow', glyph: '⏳', title: 'Not available yet' },
-  error: { tone: 'coral', glyph: '⚠️', title: 'Something went wrong' },
-  success: { tone: 'mint', glyph: '✨', title: 'All set' },
-} as const;
+const presets: Record<
+  Exclude<StateKind, 'loading'>,
+  { tone: 'plain' | 'yellow' | 'coral' | 'mint'; icon: IconName; title: string }
+> = {
+  empty: { tone: 'plain', icon: 'search-outline', title: 'Nothing found' },
+  unavailable: { tone: 'yellow', icon: 'time-outline', title: 'Not available yet' },
+  error: { tone: 'coral', icon: 'alert-circle-outline', title: 'Something went wrong' },
+  success: { tone: 'mint', icon: 'checkmark-circle-outline', title: 'All set' },
+};
 
 /**
  * One consistent presentation for non-happy-path states. Meaning is carried by the heading and
- * glyph as well as color. Errors are announced to screen readers; the others are plain content.
+ * icon as well as color. Errors are announced to screen readers; the others are plain content.
  */
 export function StateMessage({ kind, message, title }: Props) {
   if (kind === 'loading') return <LoadingBlob label={message} />;
@@ -30,7 +34,7 @@ export function StateMessage({ kind, message, title }: Props) {
     <Card tone={preset.tone}>
       <View style={styles.row} accessibilityRole={kind === 'error' ? 'alert' : undefined}>
         <View style={styles.glyph} accessibilityElementsHidden importantForAccessibility="no">
-          <Text style={[typography.bodyStrong, styles.glyphText]}>{preset.glyph}</Text>
+          <Icon name={preset.icon} size={20} color={colors.ink} />
         </View>
         <View style={styles.copy}>
           <Text style={[typography.title, styles.titleText]}>{title ?? preset.title}</Text>

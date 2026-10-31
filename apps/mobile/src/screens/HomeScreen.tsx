@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AvatarCluster } from '@/components/AvatarCluster';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { Icon, type IconName } from '@/components/Icon';
 import { Logo } from '@/components/Logo';
 import { Screen } from '@/components/Screen';
 import { StatusPill } from '@/components/StatusPill';
@@ -18,7 +19,12 @@ const STEPS = [
   'Plan together: record who is in, who is unsure and who would rather pass, then build and adjust a shared plan.',
 ] as const;
 
-const STEP_ICONS = ['👥', '🔍', '🧭', '🗺️'] as const;
+const STEP_ICONS: IconName[] = [
+  'people-outline',
+  'search-outline',
+  'compass-outline',
+  'map-outline',
+];
 
 export function HomeScreen() {
   const router = useRouter();
@@ -30,7 +36,8 @@ export function HomeScreen() {
       <View style={styles.topBar}>
         <Logo compact />
         <View style={styles.pillBadge}>
-          <Text style={styles.pillBadgeText}>✨ Cultural Outing Engine</Text>
+          <Icon name="sparkles" size={13} color={colors.yellowDeep} />
+          <Text style={styles.pillBadgeText}>Cultural Outing Engine</Text>
         </View>
       </View>
 
@@ -99,7 +106,7 @@ export function HomeScreen() {
         {STEPS.map((step, index) => (
           <View key={step} style={styles.step}>
             <View style={styles.badge} accessibilityElementsHidden importantForAccessibility="no">
-              <Text style={styles.badgeIcon}>{STEP_ICONS[index]}</Text>
+              <Icon name={STEP_ICONS[index] ?? 'sparkles-outline'} size={16} color={colors.ink} />
               <Text style={[typography.bodyStrong, styles.ink, styles.badgeNumber]}>
                 {index + 1}
               </Text>
@@ -130,6 +137,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   pillBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     backgroundColor: colors.yellow,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xxs + 2,

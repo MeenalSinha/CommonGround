@@ -1,20 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, radii, sizes, spacing, typography } from '@/theme';
 import { entityTypeLabel } from '@/utils/format';
-
-export function entityIcon(type?: string | null): string {
-  if (!type) return '⭐';
-  if (type.includes('movie') || type.includes('film')) return '🎬';
-  if (type.includes('artist') || type.includes('music')) return '🎵';
-  if (type.includes('place') || type.includes('destination')) return '🏛️';
-  if (type.includes('book') || type.includes('author')) return '📚';
-  if (type.includes('dining') || type.includes('restaurant')) return '🍽️';
-  if (type.includes('tv_show') || type.includes('series')) return '📺';
-  if (type.includes('videogame') || type.includes('game')) return '🎮';
-  if (type.includes('podcast')) return '🎙️';
-  if (type.includes('brand')) return '🏷️';
-  return '⭐';
-}
+import { Icon, getEntityTypeIconName } from './Icon';
 
 interface Props {
   name: string;
@@ -27,12 +14,10 @@ interface Props {
 /** Resolved interests show their type; unresolved ones are labelled "Not verified". */
 export function InterestChip({ name, type, unresolved = false, onRemove }: Props) {
   const detail = unresolved ? 'Not verified' : entityTypeLabel(type ?? null);
-  const icon = entityIcon(type);
+  const iconName = getEntityTypeIconName(type ?? '');
   return (
     <View style={[styles.chip, unresolved && styles.unresolved]}>
-      <Text style={styles.icon} accessibilityElementsHidden importantForAccessibility="no">
-        {icon}
-      </Text>
+      <Icon name={iconName} size={18} color={unresolved ? colors.inkSoft : colors.ink} />
       <View style={styles.text} accessible accessibilityLabel={`${name}, ${detail}`}>
         <Text style={[typography.bodyStrong, styles.ink]} numberOfLines={2}>
           {name}

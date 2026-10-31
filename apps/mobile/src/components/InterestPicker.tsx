@@ -9,7 +9,7 @@ import { entityTypeLabel } from '@/utils/format';
 import { Button } from './Button';
 import { CategoryChips } from './CategoryChips';
 import { Card } from './Card';
-import { entityIcon } from './InterestChip';
+import { Icon, getEntityTypeIconName } from './Icon';
 import { StateMessage } from './StateMessage';
 import { TextField } from './TextField';
 
@@ -106,11 +106,11 @@ export function InterestPicker({
 
       {result?.items.map((item) => {
         const added = have.has(item.id);
-        const icon = entityIcon(item.type);
+        const iconName = getEntityTypeIconName(item.type ?? '');
         return (
           <View key={item.id} style={styles.result}>
             <View style={styles.resultHeader}>
-              <Text style={styles.resultIcon}>{icon}</Text>
+              <Icon name={iconName} size={20} color={colors.ink} />
               <View style={styles.resultMeta}>
                 <Text style={[typography.bodyStrong, styles.ink]}>{item.name}</Text>
                 <Text style={[typography.caption, styles.soft]}>
