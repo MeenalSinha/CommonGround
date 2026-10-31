@@ -60,8 +60,9 @@ export function MemberCard({ member, onOpen, onRemove }: Props) {
 
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  name: { flex: 1 },
-  chips: { gap: spacing.sm },
+  name: { flex: 1, gap: 2 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  actions: { gap: spacing.sm, marginTop: spacing.xs },
   ink: { color: colors.ink },
   soft: { color: colors.inkSoft },
 });

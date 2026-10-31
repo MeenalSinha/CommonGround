@@ -281,10 +281,16 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderRadius: radii.md,
     borderWidth: sizes.borderWidth,
-    borderColor: colors.border,
+    borderBottomWidth: sizes.buttonDepth - 1,
+    borderColor: colors.borderStrong,
     backgroundColor: colors.surface,
+    cursor: 'pointer' as any,
   },
-  signalOn: { borderColor: colors.ink, backgroundColor: colors.mint },
+  signalOn: {
+    borderColor: colors.ink,
+    borderBottomColor: colors.mintDeep,
+    backgroundColor: colors.mint,
+  },
   ink: { color: colors.ink },
   soft: { color: colors.inkSoft },
 });

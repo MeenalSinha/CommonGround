@@ -18,6 +18,8 @@ const STEPS = [
   'Plan together: record who is in, who is unsure and who would rather pass, then build and adjust a shared plan.',
 ] as const;
 
+const STEP_ICONS = ['👥', '🔍', '🧭', '🗺️'] as const;
+
 export function HomeScreen() {
   const router = useRouter();
   const { state, persistence } = useParty();
@@ -25,10 +27,17 @@ export function HomeScreen() {
 
   return (
     <Screen>
-      <Logo compact />
+      <View style={styles.topBar}>
+        <Logo compact />
+        <View style={styles.pillBadge}>
+          <Text style={styles.pillBadgeText}>✨ Cultural Outing Engine</Text>
+        </View>
+      </View>
 
-      <Card tone="sky">
-        <AvatarCluster />
+      <Card tone="sky" style={styles.heroCard}>
+        <View style={styles.avatarRow}>
+          <AvatarCluster />
+        </View>
         <Text style={[typography.display, styles.ink]} accessibilityRole="header">
           Different tastes. One unforgettable adventure.
         </Text>
@@ -36,25 +45,40 @@ export function HomeScreen() {
           Friends who love different things, finding the ground they share. CommonGround uses
           cultural intelligence from Qloo to spot connections between tastes.
         </Text>
-        <Button
-          label={party ? 'Open your party' : 'Create a party'}
-          onPress={() => router.push('/party')}
-          accessibilityHint={party ? `Opens ${party.name}` : 'Starts a new party'}
-        />
-        {party && state.negotiation ? (
-          <Button
-            label={state.negotiation.plan ? 'Continue your plan' : 'Continue planning together'}
-            variant="secondary"
-            onPress={() => router.push(state.negotiation?.plan ? '/plan' : '/negotiate')}
-            accessibilityHint="Opens the saved negotiation"
-          />
+
+        {party ? (
+          <View style={styles.partyBanner}>
+            <Text style={[typography.bodyStrong, styles.ink]}>
+              Active Party: <Text style={{ color: colors.coralDeep }}>{party.name}</Text>
+            </Text>
+            <Text style={[typography.caption, styles.soft]}>
+              {party.members.length === 1 ? '1 member' : `${party.members.length} members`} ready to
+              explore
+            </Text>
+          </View>
         ) : null}
-        <Button
-          label="Try an entity search"
-          variant="secondary"
-          onPress={() => router.push('/search')}
-          accessibilityHint="Opens the Qloo entity search"
-        />
+
+        <View style={styles.buttonStack}>
+          <Button
+            label={party ? 'Open your party' : 'Create a party'}
+            onPress={() => router.push('/party')}
+            accessibilityHint={party ? `Opens ${party.name}` : 'Starts a new party'}
+          />
+          {party && state.negotiation ? (
+            <Button
+              label={state.negotiation.plan ? 'Continue your plan' : 'Continue planning together'}
+              variant="secondary"
+              onPress={() => router.push(state.negotiation?.plan ? '/plan' : '/negotiate')}
+              accessibilityHint="Opens the saved negotiation"
+            />
+          ) : null}
+          <Button
+            label="Try an entity search"
+            variant="secondary"
+            onPress={() => router.push('/search')}
+            accessibilityHint="Opens the Qloo entity search"
+          />
+        </View>
       </Card>
 
       {persistence.notice ? (
@@ -75,12 +99,15 @@ export function HomeScreen() {
         {STEPS.map((step, index) => (
           <View key={step} style={styles.step}>
             <View style={styles.badge} accessibilityElementsHidden importantForAccessibility="no">
-              <Text style={[typography.bodyStrong, styles.ink]}>{index + 1}</Text>
+              <Text style={styles.badgeIcon}>{STEP_ICONS[index]}</Text>
+              <Text style={[typography.bodyStrong, styles.ink, styles.badgeNumber]}>
+                {index + 1}
+              </Text>
             </View>
             <Text style={[typography.body, styles.ink, styles.stepText]}>{step}</Text>
           </View>
         ))}
-        <Text style={[typography.caption, styles.ink]}>
+        <Text style={[typography.caption, styles.ink, styles.privacyFootnote]}>
           Plans are saved on this device only and are not shared with anyone. Suggestions come from
           Qloo, so planning with real data starts once a Qloo key is connected.
         </Text>
@@ -93,6 +120,46 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
   ink: { color: colors.ink },
+  soft: { color: colors.inkSoft },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  pillBadge: {
+    backgroundColor: colors.yellow,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xxs + 2,
+    borderRadius: radii.pill,
+    borderWidth: 1.5,
+    borderColor: colors.yellowDeep,
+  },
+  pillBadgeText: {
+    fontFamily: typography.caption.fontFamily,
+    fontSize: 12,
+    color: colors.yellowDeep,
+    fontWeight: '800',
+  },
+  heroCard: {
+    gap: spacing.lg,
+  },
+  avatarRow: {
+    paddingVertical: spacing.xs,
+  },
+  partyBanner: {
+    backgroundColor: colors.surface,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    gap: spacing.xxs,
+  },
+  buttonStack: {
+    gap: spacing.md,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -103,13 +170,28 @@ const styles = StyleSheet.create({
   step: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   stepText: { flex: 1 },
   badge: {
-    width: sizes.touchTarget - spacing.sm,
-    height: sizes.touchTarget - spacing.sm,
-    borderRadius: radii.pill,
+    width: sizes.touchTarget,
+    height: sizes.touchTarget,
+    borderRadius: radii.md,
     borderWidth: sizes.borderWidth,
+    borderBottomWidth: sizes.buttonDepth - 1,
     borderColor: colors.ink,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 3,
+  },
+  badgeIcon: {
+    fontSize: 14,
+  },
+  badgeNumber: {
+    fontSize: 14,
+  },
+  privacyFootnote: {
+    marginTop: spacing.xs,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(43, 42, 51, 0.1)',
   },
 });

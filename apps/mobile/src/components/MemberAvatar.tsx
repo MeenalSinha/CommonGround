@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import type { AvatarColor } from '@/state/party';
-import { colors, sizes, typography } from '@/theme';
+import { colors, shadows, sizes, typography } from '@/theme';
 
 const background: Record<AvatarColor, string> = {
   sky: colors.sky,
@@ -8,6 +8,14 @@ const background: Record<AvatarColor, string> = {
   lavender: colors.lavender,
   yellow: colors.yellow,
   coral: colors.coralSoft,
+};
+
+const borderTint: Record<AvatarColor, string> = {
+  sky: colors.skyDeep,
+  mint: colors.mintDeep,
+  lavender: colors.lavenderDeep,
+  yellow: colors.yellowDeep,
+  coral: colors.coralDeep,
 };
 
 export function initials(name: string): string {
@@ -18,27 +26,52 @@ export function initials(name: string): string {
 }
 
 /** Decorative initials badge. It is not an account or photo; the name is always shown beside it. */
-export function MemberAvatar({ name, color }: { name: string; color: AvatarColor }) {
+export function MemberAvatar({
+  name,
+  color,
+  size = 'normal',
+}: {
+  name: string;
+  color: AvatarColor;
+  size?: 'small' | 'normal' | 'large';
+}) {
+  const dim =
+    size === 'small' ? sizes.avatarSmall : size === 'large' ? sizes.avatarLarge : sizes.avatar;
   return (
     <View
-      style={[styles.badge, { backgroundColor: background[color] }]}
+      style={[
+        styles.badge,
+        {
+          width: dim,
+          height: dim,
+          borderRadius: dim / 2,
+          backgroundColor: background[color],
+          borderColor: borderTint[color],
+        },
+      ]}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
-      <Text style={[typography.bodyStrong, styles.text]}>{initials(name)}</Text>
+      <Text
+        style={[
+          size === 'large' ? typography.title : typography.bodyStrong,
+          styles.text,
+          { color: borderTint[color] },
+        ]}
+      >
+        {initials(name)}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   badge: {
-    width: sizes.avatar,
-    height: sizes.avatar,
-    borderRadius: sizes.avatar / 2,
     borderWidth: sizes.borderWidth,
-    borderColor: colors.ink,
+    borderBottomWidth: sizes.buttonDepth - 1,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadows.subtle,
   },
   text: { color: colors.ink },
 });

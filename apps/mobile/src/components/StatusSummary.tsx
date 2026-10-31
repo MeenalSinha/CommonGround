@@ -17,18 +17,29 @@ export function StatusSummary({ onPress }: { onPress: () => void }) {
       accessibilityLabel={`Connection status. ${backend.label}. Qloo: ${qloo.label}.`}
       accessibilityHint="Opens connection details"
     >
-      <Text style={[typography.subtitle, styles.ink]}>Connection status</Text>
+      <View style={styles.headerRow}>
+        <Text style={[typography.subtitle, styles.ink]}>Connection status</Text>
+        <Text style={[typography.caption, styles.arrow]}>View Details →</Text>
+      </View>
       <View style={styles.pills}>
         <StatusPill {...backend} />
         <StatusPill label={`Qloo: ${qloo.label}`} tone={qloo.tone} />
       </View>
-      <Text style={[typography.caption, styles.soft]}>Tap for details</Text>
+      <Text style={[typography.caption, styles.soft]}>
+        Tap for live diagnostics and privacy settings
+      </Text>
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  pills: { gap: spacing.sm },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   ink: { color: colors.ink },
   soft: { color: colors.inkSoft },
+  arrow: { color: colors.skyDeep, fontWeight: '700' },
 });

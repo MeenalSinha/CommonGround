@@ -60,20 +60,21 @@ export function TextField({
 
 const styles = StyleSheet.create({
   wrap: { gap: spacing.xs },
-  label: { color: colors.inkSoft },
+  label: { color: colors.ink, fontWeight: '700' },
   input: {
     minHeight: sizes.touchTarget,
     borderRadius: radii.md,
     borderWidth: sizes.borderWidth,
-    borderColor: colors.ink,
-    backgroundColor: colors.cream,
+    borderBottomWidth: sizes.buttonDepth - 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surface,
     paddingHorizontal: spacing.lg,
     color: colors.ink,
     fontFamily: typography.body.fontFamily,
     fontSize: typography.body.fontSize,
   },
-  focused: { borderColor: colors.focus, borderWidth: sizes.focusBorderWidth },
-  invalid: { borderColor: colors.coralDeep },
+  focused: { borderColor: colors.coral, borderBottomColor: colors.coralDeep },
+  invalid: { borderColor: colors.coralDeep, backgroundColor: colors.coralSoft },
   disabled: { borderColor: colors.disabled, backgroundColor: colors.creamDeep },
-  error: { color: colors.coralDeep },
+  error: { color: colors.coralDeep, fontWeight: '700' },
 });

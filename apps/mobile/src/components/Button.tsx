@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, interaction, radii, sizes, spacing, typography } from '@/theme';
+import { colors, interaction, radii, shadows, sizes, spacing, typography } from '@/theme';
 
 interface Props {
   label: string;
@@ -67,6 +67,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: sizes.borderWidth,
     borderBottomWidth: sizes.buttonDepth,
+    cursor: 'pointer' as any,
+    ...shadows.subtle,
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   primary: { backgroundColor: colors.coral, borderColor: colors.coralDeep },

@@ -10,7 +10,7 @@ import { parseOptionalNumber } from '@/state/negotiation/inputs';
 import type { RankedCandidate } from '@/state/negotiation/ranking';
 import type { FeedbackKind, NegotiationCandidate, TagRef } from '@/state/negotiation/types';
 import type { Party } from '@/state/party';
-import { colors, spacing, typography } from '@/theme';
+import { colors, radii, spacing, typography } from '@/theme';
 import { entityTypeLabel, formatTime } from '@/utils/format';
 import { Button } from './Button';
 import { Card } from './Card';
@@ -100,7 +100,7 @@ export function CandidateCard(p: Props) {
         onPress={() => setShowWhy((v) => !v)}
       />
       {showWhy ? (
-        <View style={styles.stack}>
+        <View style={styles.evidenceBox}>
           {ranked.sources.length === 0 ? (
             <Text style={[typography.body, styles.ink]}>
               No recommendation request returned this. It is here because it was added by hand.
@@ -265,6 +265,14 @@ export function SetAsideCard({
 
 const styles = StyleSheet.create({
   stack: { gap: spacing.sm },
+  evidenceBox: {
+    gap: spacing.sm,
+    backgroundColor: colors.creamDeep,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+  },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   ink: { color: colors.ink },
   soft: { color: colors.inkSoft },

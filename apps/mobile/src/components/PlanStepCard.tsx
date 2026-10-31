@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FEEDBACK_LABELS, namesFor } from '@/state/negotiation/explain';
 import type { NegotiationCandidate, PlanEntry } from '@/state/negotiation/types';
 import type { Party } from '@/state/party';
-import { colors, radii, sizes, spacing, typography } from '@/theme';
+import { colors, radii, shadows, sizes, spacing, typography } from '@/theme';
 import { entityTypeLabel } from '@/utils/format';
 import { Button } from './Button';
 import { Card } from './Card';
@@ -147,10 +147,12 @@ const styles = StyleSheet.create({
     height: sizes.touchTarget - spacing.sm,
     borderRadius: radii.pill,
     borderWidth: sizes.borderWidth,
+    borderBottomWidth: sizes.buttonDepth - 1,
     borderColor: colors.ink,
     backgroundColor: colors.yellow,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadows.subtle,
   },
   // A dotted path between steps: decorative only, it implies no geography.
   connector: {

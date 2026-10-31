@@ -4,11 +4,12 @@ import { useEntitySearch } from '@/hooks/useEntitySearch';
 import type { PartyMember } from '@/state/party';
 import { validateUnresolvedText } from '@/state/party';
 import type { Entity } from '@/types/api';
-import { colors, spacing, typography } from '@/theme';
+import { colors, radii, spacing, typography } from '@/theme';
 import { entityTypeLabel } from '@/utils/format';
 import { Button } from './Button';
 import { CategoryChips } from './CategoryChips';
 import { Card } from './Card';
+import { entityIcon } from './InterestChip';
 import { StateMessage } from './StateMessage';
 import { TextField } from './TextField';
 
@@ -105,13 +106,19 @@ export function InterestPicker({
 
       {result?.items.map((item) => {
         const added = have.has(item.id);
+        const icon = entityIcon(item.type);
         return (
           <View key={item.id} style={styles.result}>
-            <Text style={[typography.bodyStrong, styles.ink]}>{item.name}</Text>
-            <Text style={[typography.caption, styles.soft]}>
-              {entityTypeLabel(item.type)}
-              {item.release_year ? `, ${item.release_year}` : ''}
-            </Text>
+            <View style={styles.resultHeader}>
+              <Text style={styles.resultIcon}>{icon}</Text>
+              <View style={styles.resultMeta}>
+                <Text style={[typography.bodyStrong, styles.ink]}>{item.name}</Text>
+                <Text style={[typography.caption, styles.soft]}>
+                  {entityTypeLabel(item.type)}
+                  {item.release_year ? `, ${item.release_year}` : ''}
+                </Text>
+              </View>
+            </View>
             {item.description ? (
               <Text style={[typography.body, styles.soft]} numberOfLines={3}>
                 {item.description}
@@ -119,7 +126,7 @@ export function InterestPicker({
             ) : null}
             <Button
               label={added ? `Added ${item.name}` : `Add ${item.name}`}
-              variant="secondary"
+              variant={added ? 'secondary' : 'primary'}
               disabled={added}
               onPress={() => onAdd(item)}
               accessibilityHint={`Adds this interest to ${member.displayName}'s profile`}
@@ -153,10 +160,24 @@ export function InterestPicker({
 const styles = StyleSheet.create({
   group: { gap: spacing.sm },
   result: {
-    gap: spacing.xs,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
+    gap: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    backgroundColor: colors.creamLight,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+  },
+  resultHeader: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    alignItems: 'center',
+  },
+  resultIcon: {
+    fontSize: 22,
+  },
+  resultMeta: {
+    flex: 1,
+    gap: 2,
   },
   ink: { color: colors.ink },
   soft: { color: colors.inkSoft },

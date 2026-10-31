@@ -52,7 +52,7 @@ export function MemberScreen() {
     <Screen edges={['left', 'right', 'bottom']}>
       <Card tone="lavender">
         <View style={styles.header}>
-          <MemberAvatar name={member.displayName} color={member.avatarColor} />
+          <MemberAvatar name={member.displayName} color={member.avatarColor} size="large" />
           <Text style={[typography.title, styles.ink, styles.name]} accessibilityRole="header">
             {member.displayName}
           </Text>
@@ -100,7 +100,7 @@ export function MemberScreen() {
             message="Search below and add things this person loves."
           />
         ) : null}
-        <View style={styles.stack}>
+        <View style={styles.chipCluster}>
           {member.interests.map((i) => (
             <InterestChip
               key={i.id}
@@ -143,5 +143,6 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   name: { flex: 1 },
   stack: { gap: spacing.sm },
+  chipCluster: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   ink: { color: colors.ink },
 });

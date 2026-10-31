@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { colors, motion, sizes, spacing } from '@/theme';
+import { colors, motion, shadows, sizes, spacing } from '@/theme';
 
 const faces = [colors.sky, colors.mint, colors.lavender, colors.yellow] as const;
 
@@ -63,10 +63,12 @@ const styles = StyleSheet.create({
   face: {
     borderRadius: 999,
     borderWidth: sizes.borderWidth,
+    borderBottomWidth: sizes.buttonDepth - 1,
     borderColor: colors.ink,
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs,
+    ...shadows.subtle,
   },
   eyes: { flexDirection: 'row', gap: spacing.md },
   eye: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.ink },

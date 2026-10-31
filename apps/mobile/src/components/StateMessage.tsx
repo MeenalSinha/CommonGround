@@ -13,10 +13,10 @@ interface Props {
 }
 
 const presets = {
-  empty: { tone: 'plain', glyph: '?', title: 'Nothing found' },
-  unavailable: { tone: 'yellow', glyph: 'i', title: 'Not available yet' },
-  error: { tone: 'coral', glyph: '!', title: 'Something went wrong' },
-  success: { tone: 'mint', glyph: '\u2713', title: 'All set' },
+  empty: { tone: 'plain', glyph: '🔍', title: 'Nothing found' },
+  unavailable: { tone: 'yellow', glyph: '⏳', title: 'Not available yet' },
+  error: { tone: 'coral', glyph: '⚠️', title: 'Something went wrong' },
+  success: { tone: 'mint', glyph: '✨', title: 'All set' },
 } as const;
 
 /**
@@ -33,7 +33,7 @@ export function StateMessage({ kind, message, title }: Props) {
           <Text style={[typography.bodyStrong, styles.glyphText]}>{preset.glyph}</Text>
         </View>
         <View style={styles.copy}>
-          <Text style={[typography.bodyStrong, styles.ink]}>{title ?? preset.title}</Text>
+          <Text style={[typography.title, styles.titleText]}>{title ?? preset.title}</Text>
           <Text style={[typography.body, styles.ink]}>{message}</Text>
         </View>
       </View>
@@ -42,18 +42,19 @@ export function StateMessage({ kind, message, title }: Props) {
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start' },
+  row: { flexDirection: 'row', gap: spacing.md, alignItems: 'center' },
   glyph: {
-    width: sizes.stateGlyph,
-    height: sizes.stateGlyph,
-    borderRadius: radii.pill,
+    width: sizes.stateGlyph + 8,
+    height: sizes.stateGlyph + 8,
+    borderRadius: radii.md,
     borderWidth: sizes.borderWidth,
     borderColor: colors.ink,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  glyphText: { color: colors.ink, lineHeight: sizes.stateGlyph - 6 },
+  glyphText: { fontSize: 16 },
   copy: { flex: 1, gap: spacing.xxs },
+  titleText: { color: colors.ink, fontSize: 18, lineHeight: 22 },
   ink: { color: colors.ink },
 });

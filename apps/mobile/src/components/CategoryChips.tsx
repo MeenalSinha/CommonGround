@@ -44,9 +44,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderRadius: radii.pill,
     borderWidth: sizes.borderWidth,
+    borderBottomWidth: sizes.buttonDepth - 1,
     borderColor: colors.ink,
     backgroundColor: colors.surface,
+    cursor: 'pointer' as any,
   },
-  active: { backgroundColor: colors.lavender },
+  active: { backgroundColor: colors.lavender, borderColor: colors.lavenderDeep },
   ink: { color: colors.ink },
 });
