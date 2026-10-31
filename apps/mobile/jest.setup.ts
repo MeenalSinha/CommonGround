@@ -20,19 +20,3 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
-
-// Vector icons mock for fast, deterministic unit tests without native font loading
-jest.mock('@expo/vector-icons', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const rn = require('react-native');
-  const MockIcon = (props: any) =>
-    React.createElement(rn.Text, { ...props, testID: props.testID ?? `icon-${props.name}` }, '');
-  return {
-    Ionicons: MockIcon,
-    MaterialIcons: MockIcon,
-    Feather: MockIcon,
-    FontAwesome5: MockIcon,
-  };
-});
